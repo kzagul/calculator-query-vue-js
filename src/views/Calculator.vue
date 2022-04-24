@@ -28,7 +28,7 @@
         <div @click="appendNum(num)" class="btn b-white">{{num}}</div>
     </div>
    
-    <div @click="append('0')" class="btn l3 b-white">0</div>
+    <div @click="appendNum('0')" class="btn l3 b-white">0</div>
 
   </div>
 </template>
@@ -114,8 +114,14 @@ export default {
     },
 
     equal() {
-      this.result = `${this.operator(parseInt(this.result), parseInt(this.previous))}`;
-      this.previous = null
+      if (this.previous === null){
+       //
+      }
+      else{
+      // let current = parseInt(this.result)
+        this.result = `${this.operator(parseInt(this.result), parseInt(this.previous))}`;
+        this.previous = null
+      }
     }
 
   }
