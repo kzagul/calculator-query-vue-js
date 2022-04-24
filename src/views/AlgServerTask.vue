@@ -1,56 +1,34 @@
 <template>
   <div class="alg">
 
-        <textarea v-model="result" class="form-control l3 h120" wrap="off" disabled="disabled"></textarea>
+    <!-- result -->
+    <textarea v-model="result" class="form-control l3 h120" wrap="off" disabled="disabled"></textarea>
 
-        <textarea id="text2" v-model="currentNum" class="form-control l3" placeholder="Insert the number" wrap="off" pattern="/\d{1}/"></textarea>
+    <!-- input number -->
+    <textarea id="text2" v-model="currentNum" class="form-control l3" placeholder="Insert number [1-9]" wrap="off" pattern="/\d{1}/"></textarea>
 
-        <div id="printRes" @click="printRes(currentNum)" class="btn b-white l3">Add task to servers</div>
-        <div @click="clear()" class="btn b-white l3">Clear servers</div>
+    <!-- buttons -->
+    <div id="printRes" @click="printRes(currentNum)" class="btn b-white l3">Add task to servers</div>
+    <div @click="clear()" class="btn b-white l3">Clear servers</div>
 
   </div>
 </template>
 
 <script>
-import {calc} from "../calc/calculator"
-
 export default {
   data() {
     return {
-
-        access: false,
-
         addStr: '',
-
         currentNum: '',
-
         mainArr: ['1: ' + '|', '2: ' + '|', '3: ' + '|'],
-    
-        res: '',
-    
-        previous: null,
-
         result: '',
-
-        operator: null,
-
-        spec: calc.argument_1,
-
         operatorClicked: false,
-
         numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-
         regExp: /^(\d{1})\b/gmu,
-
-        rules: [
-            v => !!v || 'Поле пустое',
-            v => v.match(this.regExp) != null || 'Не корректный ввод данных' 
-        ]
-
     }
   },
   methods: {
-    //
+
     clear() {
         this.result = ''
         this.mainArr = ['1: ' + '|', '2: ' + '|', '3: ' + '|']
@@ -58,16 +36,7 @@ export default {
         this.currentNum = ''
     },
 
-    //
-    append(number) {
-      if (this.operatorClicked) {
-        this.result = ''
-        this.operatorClicked = false
-      }
-      this.result = `${this.result}${eval(number)}`
-    },
-
-    //
+    //count the length of certain task
     countLengthOfStr(str, el){
         let cnt = 0
         for (let i of str){
@@ -76,61 +45,48 @@ export default {
         return cnt
     },
 
-
-    //
+    //print result -> how tasks sorted by servers
     printRes(num) {
-
         if (num.match(this.regExp) != null  && num != 0){
-        
            this.result = ''
-
-            this.getRes(num)
+            this.addTask(num)
             for (let i = 0; i < this.mainArr.length; i++){
                 this.result +=`${this.mainArr[i]}\n`
             }
             this.currentNum = ''
+            document.getElementById('text2').placeholder = "Insert number [1-9]"
         }
         else {
-            // placeholder
             this.currentNum = ''
             document.getElementById('text2').placeholder = "invalid data"
         }
-    
     },
-    //
-    getRes(num) {
-        //symbols for result
+
+    //solve to which server add a certain task
+    addTask(num){
         let divider = '|'
         let str = '_'
-
-        let addTask = (num) => {
-            let min = 12000
-            let index = 0
-            this.mainArr.forEach((item, i) => {
-                if (this.countLengthOfStr(item, '_') < min) {
-                    min = this.countLengthOfStr(item, '_'), 
-                    index = i
-                }
-            })
-
-            for (let i = 0; i < this.mainArr.length; i++){
-                if (i === index) {
-                    this.mainArr[i] += (str.repeat(num) + divider)
-                    break
-                }
+        let min = 12000
+        let index = 0
+        this.mainArr.forEach((item, i) => {
+            if (this.countLengthOfStr(item, '_') < min) {
+                min = this.countLengthOfStr(item, '_'), 
+                index = i
+            }
+        })
+        for (let i = 0; i < this.mainArr.length; i++){
+            if (i === index) {
+                this.mainArr[i] += (str.repeat(num) + divider)
+                break
             }
         }
-        addTask(num)
     }
   },
-
-  counted: {
-
-  }
 }
 </script>
 
-<style scoped>
+<style>
+/* some style */
 .alg {
     margin: auto;
     margin-top: 40px;
@@ -143,36 +99,14 @@ export default {
     grid-column-gap: 0.1em;
 }
 
-input {
-    width: 100%;
-}
-
-
-.display {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 15px;
-    border-radius: 5px;
-    font-size: 32px;
-}
 
 .btn {
     border: 1px solid rgb(0, 0, 0);
     border-radius: 5px;
 }
-
 .btn:hover {
   background-color: #088cf1;
   border: 1px solid #999;
-}
-
-.l1 {
-    grid-column: 1 / 2;
-}
-
-.l2 {
-    grid-column: 1 / 3;
 }
 
 .l3 {
@@ -184,9 +118,6 @@ input {
 }
 .b-white {
     background-color: #ffffff;
-}
-.b-orange{
-     background-color: orange;
 }
 
 .black{
@@ -202,6 +133,5 @@ input {
 .h40 {
     height: 40px; 
 }
-
 
 </style>
